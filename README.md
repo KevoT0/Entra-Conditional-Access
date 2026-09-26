@@ -91,13 +91,17 @@ A named location defines the trusted geographies; the policy then blocks everywh
 
 Identity Protection scores each sign-in for risk (impossible travel, anonymous IP, unfamiliar properties). A High or Medium risk sign-in is challenged for MFA even if the password was correct — verification that *scales with risk*.
 
-![CA05 sign-in risk condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/10.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/17.png)
+
+![CA05 sign-in risk condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/18.png)
 
 ### CA06 — Force password reset for risky users (adaptive)
 
 Where sign-in risk is about a suspicious *event*, user risk is about a likely-compromised *identity* (e.g. credentials found leaked). A High-risk user is forced through a secure password change (with MFA) to lock the attacker out.
 
-![CA06 user risk condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/11.png)
+![CA06 user risk condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/19.png)
+
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/21.png)
 
 ---
 
