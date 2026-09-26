@@ -1,7 +1,9 @@
 # Zero Trust Conditional Access Baseline in Microsoft Entra ID
 
 **Platform:** Microsoft Entra ID (P2) · Conditional Access · Identity Protection
+
 **Domain:** Identity & Access Management · Zero Trust enforcement
+
 **Approach:** Safe rollout — break-glass account, report-only validation, What If testing before enforcement
 
 ---
@@ -193,11 +195,17 @@ In report-only the user would have signed in with no prompt (logged only). Enfor
 ## Skills demonstrated
 
 · Zero Trust architecture and the three-pillar model
+
 · Conditional Access policy design (Condition → Control)
+
 · Entra ID P2 / Identity Protection (risk-based access)
+
 · Safe rollout — break-glass, report-only, What If validation
+
 · MFA enforcement, legacy-auth blocking, location and session controls
+
 · Least-privilege admin hardening
+
 · Identity as the control plane for SOC detection
 
 ---
