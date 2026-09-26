@@ -30,6 +30,7 @@ Every technique used in those real breaches maps to a control in this baseline:
 | Over-privileged / dormant account used to pivot | **CA03** — tightest controls on privileged accounts |
  
 The rest of this document shows how each was built the professional way — behind a break-glass account, in report-only mode, and validated with the What If simulator before a single policy was enforced.
+
 ---
 
 ## Zero Trust, and how Conditional Access enforces it
@@ -198,3 +199,12 @@ In report-only the user would have signed in with no prompt (logged only). Enfor
 · MFA enforcement, legacy-auth blocking, location and session controls
 · Least-privilege admin hardening
 · Identity as the control plane for SOC detection
+
+---
+
+## References
+ 
+1. Microsoft Security Response Center — *Microsoft Actions Following Attack by Nation State Actor Midnight Blizzard* (19 January 2024).
+2. Wiz — [Midnight Blizzard breach: analysis and best practices](https://www.wiz.io/blog/midnight-blizzard-microsoft-breach-analysis-and-best-practices).
+3. The Hacker News — [Hackers Breached Colonial Pipeline Using Compromised VPN Password](https://thehackernews.com/2021/06/hackers-breached-colonial-pipeline.html) (June 2021).
+4. Mandiant / US Senate testimony on the Colonial Pipeline incident (2021) — confirming the compromised VPN account had no multi-factor authentication.
