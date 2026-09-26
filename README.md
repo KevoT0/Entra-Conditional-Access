@@ -6,14 +6,30 @@
 
 ---
 
-## Summary
-
-Zero Trust means *never trust, always verify* — every access request is verified (identity, device, location, risk) as if it came from an untrusted network, regardless of where it originates. Conditional Access is how Microsoft Entra **enforces** that: each sign-in is evaluated against a set of Condition → Control policies, and access is granted, blocked, or challenged based on the signals.
-
-I designed and deployed a **six-policy Zero Trust baseline**, built it the professional way — behind a break-glass account, in report-only mode — and validated every policy with the What If simulator before enforcing. I then confirmed live enforcement by watching a policy force MFA registration on a real sign-in.
-
-**Result:** a complete, tested Conditional Access baseline mapping to the three Zero Trust pillars — verify explicitly, least privilege, assume breach — with each policy proven to fire only on its intended condition.
-
+## The problem — a real-world attack, not a hypothetical
+ 
+In **January 2024, Microsoft** disclosed that the Russian state actor **Midnight Blizzard** (also tracked as APT29 / Nobelium) had breached its corporate email — reaching the mailboxes of senior leadership, cybersecurity, and legal staff. The entry point was almost mundane: a **password-spray attack succeeded against a legacy, non-production test account that did not have multi-factor authentication enabled**. That one account had access to an OAuth application with elevated permissions, which the attacker used to pivot into the wider corporate environment. [1][2]
+ 
+Three years earlier, the **Colonial Pipeline** ransomware attack — which shut down the largest fuel pipeline in the United States and triggered fuel shortages across the East Coast — began the same way: a **single VPN account, no MFA, and a password that had already leaked in a prior breach**. The account was dormant but still active. Investigators confirmed multi-factor authentication would have broken the chain. [3][4]
+ 
+Different actors, different targets, one shared root cause: **sprayed or stolen credentials reaching an account with no second factor** — consistently the leading cause of breaches in industry reporting. Every link in both attacks is preventable, not with more passwords, but with identity controls that *verify* instead of *trust*.
+ 
+## What this project is — and the skills it proves
+ 
+This project builds, validates, and enforces the exact controls that would have broken both attack chains: a **Zero Trust Conditional Access baseline** in Microsoft Entra ID. More than a set of policies, it demonstrates the identity-engineering skills required to design them, deploy them *without locking the tenant out*, prove each one works, and move them safely from monitoring to enforcement.
+ 
+Every technique used in those real breaches maps to a control in this baseline:
+ 
+| Attack technique (Midnight Blizzard / Colonial Pipeline) | Control that stops it |
+|---|---|
+| Password spray / stolen password succeeds — no MFA | **CA01** — MFA required on every sign-in |
+| Legacy / non-modern-auth account exploited | **CA02** — legacy authentication blocked |
+| Sign-in from attacker infrastructure abroad | **CA04** — access from untrusted locations blocked |
+| Anomalous sign-in behaviour | **CA05** — risky sign-in challenged for MFA |
+| Credentials already known to be leaked | **CA06** — risky user forced to reset password |
+| Over-privileged / dormant account used to pivot | **CA03** — tightest controls on privileged accounts |
+ 
+The rest of this document shows how each was built the professional way — behind a break-glass account, in report-only mode, and validated with the What If simulator before a single policy was enforced.
 ---
 
 ## Zero Trust, and how Conditional Access enforces it
