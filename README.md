@@ -101,7 +101,7 @@ Where sign-in risk is about a suspicious *event*, user risk is about a likely-co
 
 ![CA06 user risk condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/19.png)
 
-![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/21.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/28.png)
 
 ---
 
