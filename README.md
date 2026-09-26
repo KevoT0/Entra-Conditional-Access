@@ -43,11 +43,11 @@ Conditional Access can lock an administrator out of their own tenant. Two safegu
 
 **A break-glass account** — one emergency Global Administrator, cloud-only and excluded from every policy, so there is always a way back in if a policy misfires. In production you keep two; sign-ins to it are monitored, because it should almost never be used.
 
-![Break-glass admin account](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/1.png)
+![Break-glass admin account](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/2.png)
 
 The break-glass account sits in a dedicated exclusion group that every policy excludes — so the emergency account is protected in one place, not policy by policy.
 
-![CA-Exclude-BreakGlass group](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/2.png)
+![CA-Exclude-BreakGlass group](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/1.png)
 
 **Report-only mode** — every policy was created in report-only first. It logs what it *would* do without enforcing, so the impact can be validated before it can break anything. Report-only catches problems *before* they happen; the break-glass account is the escape hatch *if* one slips through. Belt and braces.
 
@@ -59,23 +59,23 @@ The break-glass account sits in a dedicated exclusion group that every policy ex
 
 The cornerstone. A password can be phished or bought; MFA demands a second, independent proof of identity on every sign-in. Targeted at all users, with the break-glass group excluded.
 
-![CA01 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/3.png)
+![CA01 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/6.png)
 
 ### CA02 — Block legacy authentication (assume breach)
 
 Legacy protocols (POP, IMAP, SMTP AUTH, older clients) use basic authentication and **cannot perform MFA** — so an attacker with a stolen password uses them to bypass MFA entirely. The condition targets exactly those legacy client types, and the control blocks them.
 
-![CA02 client apps condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/4.png)
+![CA02 client apps condition](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/7.png)
 
-![CA02 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/5.png)
+![CA02 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/8.png)
 
 ### CA03 — Stricter controls for admins (least privilege)
 
 Admins are the highest-value target, so they get more than baseline MFA. On top of MFA, this policy adds **session controls** — a 4-hour sign-in frequency and no persistent browser session — so a stolen admin session dies quickly and can't be "remembered."
 
-![CA03 session controls](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/6.png)
+![CA03 session controls](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/10.png)
 
-![CA03 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/7.png)
+![CA03 policy summary](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/11.png)
 
 Grant controls decide whether you get *in* (MFA/block); session controls decide what happens *during* the session (how often you re-verify, whether you're remembered). CA03 uses both.
 
@@ -83,9 +83,9 @@ Grant controls decide whether you get *in* (MFA/block); session controls decide 
 
 A named location defines the trusted geographies; the policy then blocks everywhere else. The logic is *include Any location, exclude Trusted Countries* — mathematically leaving only untrusted locations, which get blocked.
 
-![Trusted Countries named location](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/8.png)
+![Trusted Countries named location](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/12.png)
 
-![CA04 excluding trusted countries](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/9.png)
+![CA04 excluding trusted countries](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/13.png)
 
 ### CA05 — Require MFA for risky sign-ins (adaptive)
 
@@ -107,27 +107,34 @@ Before enforcing, each policy was validated with the **What If** simulator, whic
 
 **Untrusted location (Russia IP) → CA01 + CA04 both apply** — MFA required *and* the sign-in blocked:
 
-![What If — Russia](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/12.png)
+![What If — Russia](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/14.png)
 
 **Trusted location (UK IP) → only CA01 applies** — CA04 correctly drops off. Same user, same app, different location, different decision. That contrast is Zero Trust adapting to signal:
 
-![What If — UK](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/13.png)
+![What If — UK](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/15.png)
 
 **Legacy client → CA01 + CA02 apply** — the legacy-auth block fires only for legacy client types:
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/20.png)
 
-![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/14.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/21.png)
 
 **Admin user → CA03 applies with its session controls** — the admin policy fires only for admins (it did not fire for the normal users), proving role-scoping works:
 
-![What If — admin](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/15.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/22.png)
+
+![What If — admin](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/23.png)
 
 **Risky sign-in (High) → CA01 + CA05 apply** — adaptive MFA on a risky event:
 
-![What If — risky sign-in](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/16.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/24.png)
+
+![What If — risky sign-in](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/25.png)
 
 **Risky user (High) → CA01 + CA06 apply** — forced password reset on a compromised identity:
 
-![What If — risky user](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/17.png)
+![What If — legacy auth](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/26.png)
+
+![What If — risky user](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/27.png)
 
 Six policies, six isolated tests, each firing exactly on its intended condition and staying silent otherwise. This is how Conditional Access is validated before it is enforced.
 
@@ -137,7 +144,7 @@ Six policies, six isolated tests, each firing exactly on its intended condition 
 
 With validation complete, CA01 was switched from report-only to **On**, and a normal user signed in. The policy stopped the sign-in and forced MFA registration — the difference between a policy that *exists* and one that *works*:
 
-![Live enforcement — MFA forced](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/18.png)
+![Live enforcement — MFA forced](https://github.com/KevoT0/Entra-Conditional-Access/blob/main/16.png)
 
 In report-only the user would have signed in with no prompt (logged only). Enforced, the policy physically requires MFA before granting access — the report-only → enforce rollout completed.
 
